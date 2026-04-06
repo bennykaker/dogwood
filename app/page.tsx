@@ -9,14 +9,14 @@ export default function HomePage() {
   const [pendingQuestion, setPendingQuestion] = useState<string | null>(null)
 
   return (
-    <div className="flex flex-col h-screen bg-forest-50 dark:bg-forest-900">
+    <div className="flex flex-col h-screen" style={{ backgroundColor: '#1c1117' }}>
       <Nav />
 
       {/* Ad bar */}
-      <div className="bg-white border-b border-gray-100 dark:bg-forest-800 dark:border-forest-700 flex-shrink-0">
+      <div className="flex-shrink-0" style={{ backgroundColor: '#251519', borderBottom: '1px solid #4a2535' }}>
         <div className="max-w-6xl mx-auto px-4 py-2 flex items-center justify-end">
-          <div className="w-48 h-8 bg-gray-100 dark:bg-forest-700 rounded border border-dashed border-gray-300 dark:border-forest-600 flex items-center justify-center">
-            <span className="text-base text-gray-400 dark:text-forest-400">Ad slot</span>
+          <div className="w-48 h-8 rounded border border-dashed flex items-center justify-center" style={{ borderColor: '#4a2535' }}>
+            <span className="text-base" style={{ color: '#9a6070' }}>Ad slot</span>
           </div>
         </div>
       </div>
@@ -30,8 +30,8 @@ export default function HomePage() {
         </div>
 
         {/* Chat panel */}
-        <div className="flex-1 min-w-0 flex flex-col h-full bg-forest-50 dark:bg-forest-800 border border-forest-200 dark:border-forest-700 rounded-2xl p-6 shadow-sm">
-          <h1 className="font-serif text-2xl text-forest-700 dark:text-white mb-5 leading-tight">
+        <div className="flex-1 min-w-0 flex flex-col h-full rounded-2xl p-6 shadow-sm" style={{ backgroundColor: '#251519', border: '1px solid #4a2535' }}>
+          <h1 className="font-serif text-2xl mb-5 leading-tight" style={{ color: '#f0e4eb' }}>
             Ask your question here.
           </h1>
           <ChatInterface

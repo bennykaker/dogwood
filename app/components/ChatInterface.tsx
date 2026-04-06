@@ -8,16 +8,23 @@ type Message = {
   escalated?: boolean
 }
 
+const PLUM = '#7b2d55'
+const PLUM_DARK = '#251519'
+const BUBBLE_BG = '#2e1620'
+const BUBBLE_BORDER = '#4a2535'
+const TEXT = '#f0e4eb'
+const TEXT_MUTED = '#9a6070'
+
 function TypingIndicator() {
   return (
     <div className="flex items-start gap-3">
-      <div className="w-9 h-9 rounded-full bg-forest-600 flex items-center justify-center text-white text-base font-bold flex-shrink-0">
+      <div className="w-9 h-9 rounded-full flex items-center justify-center text-base font-bold flex-shrink-0 text-white" style={{ backgroundColor: PLUM }}>
         D
       </div>
-      <div className="bg-forest-50 border border-forest-100 dark:bg-forest-700 dark:border-forest-600 rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-1.5">
-        <span className="typing-dot w-2 h-2 rounded-full bg-forest-400 inline-block" />
-        <span className="typing-dot w-2 h-2 rounded-full bg-forest-400 inline-block" />
-        <span className="typing-dot w-2 h-2 rounded-full bg-forest-400 inline-block" />
+      <div className="rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-1.5" style={{ backgroundColor: BUBBLE_BG, border: `1px solid ${BUBBLE_BORDER}` }}>
+        <span className="typing-dot w-2 h-2 rounded-full inline-block" style={{ backgroundColor: PLUM }} />
+        <span className="typing-dot w-2 h-2 rounded-full inline-block" style={{ backgroundColor: PLUM }} />
+        <span className="typing-dot w-2 h-2 rounded-full inline-block" style={{ backgroundColor: PLUM }} />
       </div>
     </div>
   )
@@ -25,28 +32,26 @@ function TypingIndicator() {
 
 function MessageBubble({ msg }: { msg: Message }) {
   const isUser = msg.role === 'user'
-  const plum = '#7b2d55'
   return (
     <div className={`flex items-start gap-3 ${isUser ? 'flex-row-reverse' : ''}`}>
       <div
         className="w-9 h-9 rounded-full flex items-center justify-center text-base font-bold flex-shrink-0 text-white"
-        style={{ backgroundColor: isUser ? plum : '#059669' }}
+        style={{ backgroundColor: PLUM }}
       >
         {isUser ? 'You' : 'D'}
       </div>
       <div className={`max-w-[80%] flex flex-col gap-1.5 ${isUser ? 'items-end' : 'items-start'}`}>
         <div
-          className={`px-4 py-3 rounded-2xl text-base leading-relaxed whitespace-pre-wrap ${
-            isUser
-              ? 'text-white rounded-tr-sm'
-              : 'bg-white border border-gray-200 text-gray-800 rounded-tl-sm dark:bg-forest-700 dark:border-forest-600 dark:text-gray-100'
-          }`}
-          style={isUser ? { backgroundColor: plum } : {}}
+          className="px-4 py-3 rounded-2xl text-base leading-relaxed whitespace-pre-wrap"
+          style={isUser
+            ? { backgroundColor: PLUM, color: TEXT, borderRadius: '1rem', borderTopRightRadius: '0.25rem' }
+            : { backgroundColor: BUBBLE_BG, border: `1px solid ${BUBBLE_BORDER}`, color: TEXT, borderRadius: '1rem', borderTopLeftRadius: '0.25rem' }
+          }
         >
           {msg.content}
         </div>
         {msg.escalated && (
-          <p className="text-base text-amber-600 dark:text-amber-400 font-medium px-1">
+          <p className="text-base font-medium px-1" style={{ color: '#c9884a' }}>
             We&apos;ve flagged this for a real person. Check back soon.
           </p>
         )}
@@ -65,7 +70,6 @@ export default function ChatInterface({ pendingQuestion, onQuestionSent }: {
   const bottomRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-  // Fire pending question from sidebar
   useEffect(() => {
     if (pendingQuestion) {
       sendMessage(pendingQuestion)
@@ -130,9 +134,12 @@ export default function ChatInterface({ pendingQuestion, onQuestionSent }: {
   return (
     <div className="flex flex-col flex-1 min-h-0">
 
-      {/* Prominent input at top */}
+      {/* Input */}
       <div className="mb-5">
-        <div className="flex gap-3 items-end bg-white dark:bg-forest-800 border-2 border-forest-300 dark:border-forest-500 rounded-2xl p-3 shadow-md focus-within:border-forest-500 dark:focus-within:border-forest-400 transition-colors">
+        <div
+          className="flex gap-3 items-end rounded-2xl p-3 shadow-md transition-colors"
+          style={{ backgroundColor: PLUM_DARK, border: `2px solid ${BUBBLE_BORDER}` }}
+        >
           <textarea
             ref={textareaRef}
             value={input}
@@ -142,14 +149,14 @@ export default function ChatInterface({ pendingQuestion, onQuestionSent }: {
             rows={2}
             disabled={loading}
             autoFocus
-            className="flex-1 resize-none bg-transparent text-base text-gray-800 dark:text-gray-100 placeholder-gray-400 dark:placeholder-forest-400 outline-none py-1 px-2 leading-relaxed"
-            style={{ maxHeight: '160px' }}
+            className="flex-1 resize-none bg-transparent text-base outline-none py-1 px-2 leading-relaxed"
+            style={{ color: TEXT, maxHeight: '160px' }}
           />
           <button
             onClick={() => sendMessage(input)}
             disabled={!input.trim() || loading}
-            className="w-11 h-11 rounded-xl disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center flex-shrink-0 transition-colors"
-            style={{ backgroundColor: '#7b2d55' }}
+            className="w-11 h-11 rounded-xl disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center flex-shrink-0 transition-opacity"
+            style={{ backgroundColor: PLUM }}
             aria-label="Send"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -158,16 +165,16 @@ export default function ChatInterface({ pendingQuestion, onQuestionSent }: {
             </svg>
           </button>
         </div>
-        <p className="text-base text-gray-400 dark:text-forest-500 mt-2 text-center">
+        <p className="text-base mt-2 text-center" style={{ color: TEXT_MUTED }}>
           Enter to send · Shift+Enter for new line
         </p>
       </div>
 
-      {/* Message history */}
+      {/* Messages */}
       <div className="flex-1 min-h-0 overflow-y-auto chat-scroll flex flex-col gap-4 pb-2">
         {messages.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-full text-center py-16 gap-3">
-            <p className="text-base text-gray-400 dark:text-forest-400">
+          <div className="flex flex-col items-center justify-center h-full text-center py-16">
+            <p className="text-base" style={{ color: TEXT_MUTED }}>
               Ask a question above or pick one from the list on the left.
             </p>
           </div>

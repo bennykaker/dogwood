@@ -25,19 +25,24 @@ function TypingIndicator() {
 
 function MessageBubble({ msg }: { msg: Message }) {
   const isUser = msg.role === 'user'
+  const plum = '#7b2d55'
   return (
     <div className={`flex items-start gap-3 ${isUser ? 'flex-row-reverse' : ''}`}>
-      <div className={`w-9 h-9 rounded-full flex items-center justify-center text-base font-bold flex-shrink-0 ${
-        isUser ? 'bg-plum-500 text-white' : 'bg-forest-600 text-white'
-      }`}>
+      <div
+        className="w-9 h-9 rounded-full flex items-center justify-center text-base font-bold flex-shrink-0 text-white"
+        style={{ backgroundColor: isUser ? plum : '#059669' }}
+      >
         {isUser ? 'You' : 'D'}
       </div>
       <div className={`max-w-[80%] flex flex-col gap-1.5 ${isUser ? 'items-end' : 'items-start'}`}>
-        <div className={`px-4 py-3 rounded-2xl text-base leading-relaxed whitespace-pre-wrap ${
-          isUser
-            ? 'bg-plum-500 text-white rounded-tr-sm'
-            : 'bg-forest-50 border border-forest-100 text-forest-800 rounded-tl-sm dark:bg-forest-700 dark:border-forest-600 dark:text-gray-100'
-        }`}>
+        <div
+          className={`px-4 py-3 rounded-2xl text-base leading-relaxed whitespace-pre-wrap ${
+            isUser
+              ? 'text-white rounded-tr-sm'
+              : 'bg-white border border-gray-200 text-gray-800 rounded-tl-sm dark:bg-forest-700 dark:border-forest-600 dark:text-gray-100'
+          }`}
+          style={isUser ? { backgroundColor: plum } : {}}
+        >
           {msg.content}
         </div>
         {msg.escalated && (
@@ -143,7 +148,8 @@ export default function ChatInterface({ pendingQuestion, onQuestionSent }: {
           <button
             onClick={() => sendMessage(input)}
             disabled={!input.trim() || loading}
-            className="w-11 h-11 rounded-xl bg-forest-600 hover:bg-forest-700 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center flex-shrink-0 transition-colors"
+            className="w-11 h-11 rounded-xl disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center flex-shrink-0 transition-colors"
+            style={{ backgroundColor: '#7b2d55' }}
             aria-label="Send"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

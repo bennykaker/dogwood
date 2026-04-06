@@ -9,15 +9,8 @@ export default function HomePage() {
   const [pendingQuestion, setPendingQuestion] = useState<string | null>(null)
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50 dark:bg-forest-900">
+    <div className="flex flex-col h-screen bg-forest-50 dark:bg-forest-900">
       <Nav />
-
-      {/* Disclaimer */}
-      <div className="bg-amber-50 border-b border-amber-200 dark:bg-amber-950 dark:border-amber-800 flex-shrink-0">
-        <div className="max-w-6xl mx-auto px-4 py-2.5 text-base text-amber-800 dark:text-amber-300 text-center leading-relaxed">
-          General insurance information only — not legal or financial advice. For coverage decisions consult a licensed BC broker.
-        </div>
-      </div>
 
       {/* Ad bar */}
       <div className="bg-white border-b border-gray-100 dark:bg-forest-800 dark:border-forest-700 flex-shrink-0">
@@ -37,7 +30,7 @@ export default function HomePage() {
         </div>
 
         {/* Chat panel */}
-        <div className="flex-1 min-w-0 flex flex-col h-full bg-white dark:bg-forest-800 border border-gray-200 dark:border-forest-700 rounded-2xl p-6 shadow-sm">
+        <div className="flex-1 min-w-0 flex flex-col h-full bg-forest-50 dark:bg-forest-800 border border-forest-200 dark:border-forest-700 rounded-2xl p-6 shadow-sm">
           <h1 className="font-serif text-2xl text-forest-700 dark:text-white mb-5 leading-tight">
             Ask your question here.
           </h1>

@@ -18,7 +18,7 @@ const QUESTIONS = [
 export default function QuestionSidebar({ onQuestion }: { onQuestion: (q: string) => void }) {
   return (
     <aside className="w-72 flex-shrink-0 flex flex-col">
-      <div className="bg-white dark:bg-forest-800 border border-gray-200 dark:border-forest-700 rounded-2xl p-5 flex flex-col flex-1">
+      <div className="bg-forest-50 dark:bg-forest-800 border border-forest-200 dark:border-forest-700 rounded-2xl p-5 flex flex-col flex-1">
         <h2 className="text-base font-bold text-forest-700 dark:text-white uppercase tracking-wide mb-4">
           Top Questions
         </h2>

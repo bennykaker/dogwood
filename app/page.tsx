@@ -1,45 +1,69 @@
+'use client'
+
+import { useState } from 'react'
 import Nav from './components/Nav'
 import ChatInterface from './components/ChatInterface'
+import QuestionSidebar from './components/QuestionSidebar'
 
 export default function HomePage() {
+  const [pendingQuestion, setPendingQuestion] = useState<string | null>(null)
+
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen bg-gray-50 dark:bg-navy-900">
       <Nav />
 
-      {/* Disclaimer bar */}
-      <div className="bg-amber-50 border-b border-amber-200">
-        <div className="max-w-4xl mx-auto px-4 py-2 text-xs text-amber-800 text-center leading-relaxed">
+      {/* Disclaimer */}
+      <div className="bg-amber-50 border-b border-amber-200 dark:bg-amber-950 dark:border-amber-800 flex-shrink-0">
+        <div className="max-w-6xl mx-auto px-4 py-2.5 text-base text-amber-800 dark:text-amber-300 text-center leading-relaxed">
           General insurance information only — not legal or financial advice. For coverage decisions consult a licensed BC broker.
         </div>
       </div>
 
-      {/* Ad bar */}
-      <div className="bg-white border-b border-gray-100">
-        <div className="max-w-4xl mx-auto px-4 py-2 flex items-center justify-between gap-4">
-          <p className="text-xs text-gray-400">
-            Dogwood is free. We keep the lights on with ads for non-insurance products. That&apos;s the deal.
-          </p>
-          {/* Placeholder ad slot */}
-          <div className="flex-shrink-0 w-48 h-8 bg-gray-100 rounded border border-dashed border-gray-300 flex items-center justify-center">
-            <span className="text-xs text-gray-400">Ad slot</span>
+      {/* Coverage scope */}
+      <div className="bg-navy-700 flex-shrink-0">
+        <div className="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <span className="text-base font-semibold text-white">Covers:</span>
+            {['🏠 Home', '🏢 Strata & Condo', '🏠 Tenant', '⛵ Boat', '💼 Small Business'].map(item => (
+              <span key={item} className="text-base text-navy-100">{item}</span>
+            ))}
+          </div>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <span className="text-base text-navy-300 italic">Not life insurance</span>
+            <span className="text-base text-navy-300">·</span>
+            <span className="text-base text-navy-300 italic">Auto: ICBC basics only</span>
           </div>
         </div>
       </div>
 
-      {/* Main */}
-      <main className="flex-1 min-h-0 flex flex-col max-w-4xl w-full mx-auto px-4 py-6">
-        {/* Hero */}
-        <div className="mb-6">
-          <h1 className="font-serif text-3xl sm:text-4xl text-gray-900 leading-tight mb-2">
-            BC insurance questions,<br className="hidden sm:block" /> answered instantly.
-          </h1>
-          <p className="text-gray-500 text-sm">
-            Ask about ICBC, strata, earthquake, tenant insurance, and more — specific to British Columbia.
-          </p>
+      {/* Ad bar */}
+      <div className="bg-white border-b border-gray-100 dark:bg-navy-800 dark:border-navy-700 flex-shrink-0">
+        <div className="max-w-6xl mx-auto px-4 py-2 flex items-center justify-end">
+          <div className="w-48 h-8 bg-gray-100 dark:bg-navy-700 rounded border border-dashed border-gray-300 dark:border-navy-500 flex items-center justify-center">
+            <span className="text-base text-gray-400 dark:text-navy-400">Ad slot</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Main two-column layout */}
+      <main className="flex-1 min-h-0 max-w-6xl w-full mx-auto px-4 py-6 flex gap-6 items-start">
+
+        {/* Left sidebar */}
+        <div className="hidden md:flex flex-col w-72 flex-shrink-0 self-stretch">
+          <QuestionSidebar onQuestion={q => setPendingQuestion(q)} />
         </div>
 
-        {/* Chat */}
-        <ChatInterface />
+        {/* Chat panel */}
+        <div className="flex-1 min-w-0 flex flex-col h-full bg-white dark:bg-navy-800 border border-gray-200 dark:border-navy-700 rounded-2xl p-6 shadow-sm">
+          <h1 className="font-serif text-2xl text-navy-700 dark:text-white mb-5 leading-tight">
+            BC insurance questions, answered instantly.
+          </h1>
+          <ChatInterface
+            pendingQuestion={pendingQuestion}
+            onQuestionSent={() => setPendingQuestion(null)}
+          />
+        </div>
+
       </main>
     </div>
   )

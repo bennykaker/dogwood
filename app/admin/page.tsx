@@ -20,20 +20,20 @@ function formatDate(iso: string) {
 
 function EscalationCard({ item }: { item: Escalation }) {
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-5 flex flex-col gap-3">
+    <div className="bg-white dark:bg-navy-800 border border-gray-200 dark:border-navy-700 rounded-xl p-5 flex flex-col gap-4">
       <div className="flex items-center justify-between gap-4">
-        <span className="text-xs text-amber-600 font-semibold bg-amber-50 border border-amber-200 rounded-full px-3 py-0.5">
+        <span className="text-base font-semibold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 rounded-full px-3 py-1">
           Escalated
         </span>
-        <span className="text-xs text-gray-400">{formatDate(item.timestamp)}</span>
+        <span className="text-base text-gray-400 dark:text-navy-400">{formatDate(item.timestamp)}</span>
       </div>
       <div>
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Question</p>
-        <p className="text-sm text-gray-900">{item.question}</p>
+        <p className="text-base font-semibold text-gray-500 dark:text-navy-400 uppercase tracking-wide mb-2">Question</p>
+        <p className="text-base text-gray-900 dark:text-gray-100">{item.question}</p>
       </div>
       <div>
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Dogwood response</p>
-        <p className="text-sm text-gray-600 whitespace-pre-wrap">{item.reply}</p>
+        <p className="text-base font-semibold text-gray-500 dark:text-navy-400 uppercase tracking-wide mb-2">Dogwood response</p>
+        <p className="text-base text-gray-600 dark:text-gray-300 whitespace-pre-wrap">{item.reply}</p>
       </div>
     </div>
   )
@@ -67,30 +67,32 @@ export default function AdminPage() {
 
   if (!authed) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-        <div className="bg-white border border-gray-200 rounded-2xl p-8 w-full max-w-sm shadow-sm">
-          <div className="flex items-center gap-2.5 mb-6">
-            <DogwoodLogo size={28} />
-            <span className="font-serif text-xl text-gray-900">Dogwood Admin</span>
+      <div className="min-h-screen bg-gray-50 dark:bg-navy-900 flex items-center justify-center px-4">
+        <div className="bg-white dark:bg-navy-800 border border-gray-200 dark:border-navy-700 rounded-2xl p-8 w-full max-w-sm shadow-sm">
+          <div className="flex items-center gap-3 mb-6">
+            <DogwoodLogo size={30} />
+            <span className="font-serif text-xl text-gray-900 dark:text-white">Dogwood Admin</span>
           </div>
           <form onSubmit={handleLogin} className="flex flex-col gap-4">
             <div>
-              <label className="text-sm font-medium text-gray-700 block mb-1.5">Password</label>
+              <label className="text-base font-medium text-gray-700 dark:text-gray-300 block mb-2">Password</label>
               <input
                 type="password"
                 value={password}
                 onChange={e => { setPassword(e.target.value); setError(false) }}
                 autoFocus
-                className={`w-full border rounded-xl px-4 py-2.5 text-sm outline-none transition-colors ${
-                  error ? 'border-red-400 bg-red-50' : 'border-gray-200 focus:border-coral-400'
+                className={`w-full border rounded-xl px-4 py-3 text-base outline-none transition-colors bg-white dark:bg-navy-900 text-gray-900 dark:text-white ${
+                  error
+                    ? 'border-red-400 bg-red-50 dark:bg-red-950'
+                    : 'border-gray-200 dark:border-navy-600 focus:border-navy-400'
                 }`}
                 placeholder="Enter password"
               />
-              {error && <p className="text-xs text-red-500 mt-1.5">Incorrect password.</p>}
+              {error && <p className="text-base text-red-500 mt-2">Incorrect password.</p>}
             </div>
             <button
               type="submit"
-              className="w-full bg-coral-500 hover:bg-coral-600 text-white font-semibold rounded-xl py-2.5 text-sm transition-colors"
+              className="w-full bg-navy-600 hover:bg-navy-700 text-white font-semibold rounded-xl py-3 text-base transition-colors"
             >
               Sign in
             </button>
@@ -101,23 +103,23 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b border-gray-100 px-4 py-3 flex items-center gap-2.5">
-        <DogwoodLogo size={26} />
-        <span className="font-serif text-xl text-gray-900">Admin — Escalations</span>
+    <div className="min-h-screen bg-gray-50 dark:bg-navy-900">
+      <div className="bg-navy-600 px-4 py-4 flex items-center gap-3">
+        <DogwoodLogo size={28} white />
+        <span className="font-serif text-xl text-white">Admin — Escalations</span>
       </div>
 
       <div className="max-w-3xl mx-auto px-4 py-8">
         {loading ? (
-          <p className="text-gray-400 text-sm text-center py-16">Loading…</p>
+          <p className="text-base text-gray-400 dark:text-navy-400 text-center py-16">Loading…</p>
         ) : escalations.length === 0 ? (
           <div className="text-center py-16">
-            <p className="text-gray-400 text-sm">No escalations yet.</p>
-            <p className="text-gray-300 text-xs mt-1">Questions flagged with "This one needs a human" will appear here.</p>
+            <p className="text-base text-gray-400 dark:text-navy-400">No escalations yet.</p>
+            <p className="text-base text-gray-300 dark:text-navy-500 mt-2">Questions flagged with "This one needs a human" will appear here.</p>
           </div>
         ) : (
           <div className="flex flex-col gap-4">
-            <p className="text-sm text-gray-500 mb-2">
+            <p className="text-base text-gray-500 dark:text-navy-400 mb-2">
               {escalations.length} escalation{escalations.length !== 1 ? 's' : ''} · most recent first
             </p>
             {escalations.map(item => (

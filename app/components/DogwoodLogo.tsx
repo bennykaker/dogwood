@@ -1,4 +1,7 @@
-export default function DogwoodLogo({ size = 32 }: { size?: number }) {
+export default function DogwoodLogo({ size = 32, white = false }: { size?: number; white?: boolean }) {
+  const petal = white ? '#ffffff' : '#c1441a'
+  const disk   = white ? '#e2e8f0' : '#7c2206'
+  const center = white ? '#1e3a5c' : '#fef3c7'
   return (
     <svg
       width={size}
@@ -9,16 +12,16 @@ export default function DogwoodLogo({ size = 32 }: { size?: number }) {
       aria-hidden="true"
     >
       {/* Top petal */}
-      <path d="M24 3 C28 9 28 15 24 18 C20 15 20 9 24 3Z" fill="#c1441a" />
+      <path d="M24 3 C28 9 28 15 24 18 C20 15 20 9 24 3Z" fill={petal} />
       {/* Right petal */}
-      <path d="M45 24 C39 28 33 28 30 24 C33 20 39 20 45 24Z" fill="#c1441a" />
+      <path d="M45 24 C39 28 33 28 30 24 C33 20 39 20 45 24Z" fill={petal} />
       {/* Bottom petal */}
-      <path d="M24 45 C20 39 20 33 24 30 C28 33 28 39 24 45Z" fill="#c1441a" />
+      <path d="M24 45 C20 39 20 33 24 30 C28 33 28 39 24 45Z" fill={petal} />
       {/* Left petal */}
-      <path d="M3 24 C9 20 15 20 18 24 C15 28 9 28 3 24Z" fill="#c1441a" />
+      <path d="M3 24 C9 20 15 20 18 24 C15 28 9 28 3 24Z" fill={petal} />
       {/* Center disk */}
-      <circle cx="24" cy="24" r="6.5" fill="#7c2206" />
-      <circle cx="24" cy="24" r="3.5" fill="#fef3c7" />
+      <circle cx="24" cy="24" r="6.5" fill={disk} />
+      <circle cx="24" cy="24" r="3.5" fill={center} />
       {/* Petal notches */}
       <path d="M24 3 L23 5 L24 7 L25 5Z" fill="#fff" opacity="0.25" />
       <path d="M45 24 L43 23 L41 24 L43 25Z" fill="#fff" opacity="0.25" />

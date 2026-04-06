@@ -29,7 +29,7 @@ export default function QuestionSidebar({ onQuestion }: { onQuestion: (q: string
                 onClick={() => onQuestion(q)}
                 className="w-full text-left flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-forest-50 dark:hover:bg-forest-700 transition-colors group"
               >
-                <span className="text-base font-bold text-coral-500 group-hover:text-coral-600 w-5 flex-shrink-0 mt-0.5">
+                <span className="text-base font-bold text-plum-500 group-hover:text-plum-600 w-5 flex-shrink-0 mt-0.5">
                   {i + 1}.
                 </span>
                 <span className="text-base text-forest-700 dark:text-forest-200 leading-snug group-hover:text-forest-900 dark:group-hover:text-white">

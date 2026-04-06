@@ -1,34 +1,9 @@
 import { NextRequest } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
-import fs from 'fs'
-import path from 'path'
+import { supabaseAdmin } from '../../../lib/supabaseAdmin'
 import { SYSTEM_PROMPT } from '../../../lib/systemPrompt'
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
-
-const ESCALATIONS_FILE = process.env.VERCEL
-  ? '/tmp/escalations.json'
-  : path.join(process.cwd(), 'escalations.json')
-
-function readEscalations(): object[] {
-  try {
-    const raw = fs.readFileSync(ESCALATIONS_FILE, 'utf8')
-    return JSON.parse(raw)
-  } catch {
-    return []
-  }
-}
-
-function writeEscalation(question: string, reply: string) {
-  const existing = readEscalations()
-  existing.push({
-    id: Date.now().toString(),
-    timestamp: new Date().toISOString(),
-    question,
-    reply,
-  })
-  fs.writeFileSync(ESCALATIONS_FILE, JSON.stringify(existing, null, 2))
-}
 
 export async function POST(req: NextRequest) {
   const { messages } = await req.json()
@@ -54,7 +29,11 @@ export async function POST(req: NextRequest) {
 
   if (escalated) {
     try {
-      writeEscalation(userQuestion, reply)
+      await supabaseAdmin.from('escalations').insert({
+        question: userQuestion,
+        dogwood_reply: reply,
+        status: 'pending',
+      })
     } catch {
       // Non-fatal — escalation logging best-effort
     }

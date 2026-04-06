@@ -28,14 +28,14 @@ function MessageBubble({ msg }: { msg: Message }) {
   return (
     <div className={`flex items-start gap-3 ${isUser ? 'flex-row-reverse' : ''}`}>
       <div className={`w-9 h-9 rounded-full flex items-center justify-center text-base font-bold flex-shrink-0 ${
-        isUser ? 'bg-coral-500 text-white' : 'bg-forest-600 text-white'
+        isUser ? 'bg-plum-500 text-white' : 'bg-forest-600 text-white'
       }`}>
         {isUser ? 'You' : 'D'}
       </div>
       <div className={`max-w-[80%] flex flex-col gap-1.5 ${isUser ? 'items-end' : 'items-start'}`}>
         <div className={`px-4 py-3 rounded-2xl text-base leading-relaxed whitespace-pre-wrap ${
           isUser
-            ? 'bg-coral-500 text-white rounded-tr-sm'
+            ? 'bg-plum-500 text-white rounded-tr-sm'
             : 'bg-forest-50 border border-forest-100 text-forest-800 rounded-tl-sm dark:bg-forest-700 dark:border-forest-600 dark:text-gray-100'
         }`}>
           {msg.content}

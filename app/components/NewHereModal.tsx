@@ -10,7 +10,7 @@ export default function NewHereModal() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="w-full mt-4 border border-navy-200 dark:border-navy-600 text-navy-600 dark:text-navy-300 rounded-xl py-2.5 px-4 text-base font-medium hover:bg-navy-50 dark:hover:bg-navy-700 transition-colors text-left"
+        className="w-full mt-4 border border-forest-200 dark:border-forest-600 text-forest-600 dark:text-forest-300 rounded-xl py-2.5 px-4 text-base font-medium hover:bg-forest-50 dark:hover:bg-forest-700 transition-colors text-left"
       >
         New here? →
       </button>
@@ -21,12 +21,12 @@ export default function NewHereModal() {
           onClick={() => setOpen(false)}
         >
           <div
-            className="bg-white dark:bg-navy-800 border border-gray-200 dark:border-navy-600 rounded-2xl p-8 w-full max-w-md shadow-xl"
+            className="bg-white dark:bg-forest-800 border border-gray-200 dark:border-forest-600 rounded-2xl p-8 w-full max-w-md shadow-xl"
             onClick={e => e.stopPropagation()}
           >
             <div className="flex items-center gap-3 mb-5">
               <DogwoodLogo size={32} />
-              <span className="font-serif text-2xl text-navy-700 dark:text-white">Welcome to Dogwood</span>
+              <span className="font-serif text-2xl text-forest-700 dark:text-white">Welcome to Dogwood</span>
             </div>
             <p className="text-base text-gray-700 dark:text-gray-200 leading-relaxed mb-4">
               Dogwood is an AI-powered place to get your BC insurance questions answered. The AI chat is getting smarter every day and can hopefully answer your question right away.
@@ -41,7 +41,7 @@ export default function NewHereModal() {
             </div>
             <button
               onClick={() => setOpen(false)}
-              className="w-full bg-navy-600 hover:bg-navy-700 text-white font-semibold rounded-xl py-3 text-base transition-colors"
+              className="w-full bg-forest-600 hover:bg-forest-700 text-white font-semibold rounded-xl py-3 text-base transition-colors"
             >
               Got it
             </button>

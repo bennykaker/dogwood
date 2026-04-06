@@ -18,8 +18,8 @@ const QUESTIONS = [
 export default function QuestionSidebar({ onQuestion }: { onQuestion: (q: string) => void }) {
   return (
     <aside className="w-72 flex-shrink-0 flex flex-col">
-      <div className="bg-white dark:bg-navy-800 border border-gray-200 dark:border-navy-700 rounded-2xl p-5 flex flex-col flex-1">
-        <h2 className="text-base font-bold text-navy-700 dark:text-white uppercase tracking-wide mb-4">
+      <div className="bg-white dark:bg-forest-800 border border-gray-200 dark:border-forest-700 rounded-2xl p-5 flex flex-col flex-1">
+        <h2 className="text-base font-bold text-forest-700 dark:text-white uppercase tracking-wide mb-4">
           Top Questions
         </h2>
         <ol className="flex flex-col gap-1 flex-1">
@@ -27,12 +27,12 @@ export default function QuestionSidebar({ onQuestion }: { onQuestion: (q: string
             <li key={q}>
               <button
                 onClick={() => onQuestion(q)}
-                className="w-full text-left flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-navy-50 dark:hover:bg-navy-700 transition-colors group"
+                className="w-full text-left flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-forest-50 dark:hover:bg-forest-700 transition-colors group"
               >
                 <span className="text-base font-bold text-coral-500 group-hover:text-coral-600 w-5 flex-shrink-0 mt-0.5">
                   {i + 1}.
                 </span>
-                <span className="text-base text-navy-700 dark:text-navy-200 leading-snug group-hover:text-navy-900 dark:group-hover:text-white">
+                <span className="text-base text-forest-700 dark:text-forest-200 leading-snug group-hover:text-forest-900 dark:group-hover:text-white">
                   {q}
                 </span>
               </button>

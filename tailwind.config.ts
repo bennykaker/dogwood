@@ -6,17 +6,18 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        navy: {
-          DEFAULT: '#1e3a5c',
-          50:  '#f0f4f9',
-          100: '#dce6f0',
-          200: '#b3c8dd',
-          400: '#4a7aaa',
-          500: '#2d5f8a',
-          600: '#1e3a5c',
-          700: '#152b45',
-          800: '#0e1e30',
-          900: '#090f18',
+        forest: {
+          DEFAULT: '#2d5a27',
+          50:  '#f1f7f0',
+          100: '#d9edd6',
+          200: '#afd5aa',
+          300: '#7db876',
+          400: '#4d9e43',
+          500: '#3a7a32',
+          600: '#2d5a27',
+          700: '#1e3f1a',
+          800: '#132910',
+          900: '#0a180a',
         },
         coral: {
           DEFAULT: '#c1441a',

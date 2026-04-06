@@ -36,6 +36,9 @@ const config: Config = {
       },
     },
   },
+  safelist: [
+    'bg-plum-500', 'bg-plum-600', 'text-plum-500', 'text-plum-400', 'hover:text-plum-600',
+  ],
   plugins: [],
 }
 

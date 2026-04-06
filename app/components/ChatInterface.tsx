@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import ReactMarkdown from 'react-markdown'
 
 type Message = {
   role: 'user' | 'assistant'
@@ -35,13 +36,25 @@ function MessageBubble({ msg }: { msg: Message }) {
       </div>
       <div className={`max-w-[80%] flex flex-col gap-1.5 ${isUser ? 'items-end' : 'items-start'}`}>
         <div
-          className="px-4 py-3 text-base leading-relaxed whitespace-pre-wrap"
+          className="px-4 py-3 text-base leading-relaxed"
           style={isUser
             ? { backgroundColor: '#fff', color: '#000', borderRadius: '1rem', borderTopRightRadius: '0.25rem' }
             : { backgroundColor: '#1a1a1a', border: '1px solid #2e2e2e', color: '#f5f5f5', borderRadius: '1rem', borderTopLeftRadius: '0.25rem' }
           }
         >
-          {msg.content}
+          {isUser ? msg.content : (
+            <ReactMarkdown
+              components={{
+                p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+                strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+                ul: ({ children }) => <ul className="list-disc pl-5 mb-2 flex flex-col gap-1">{children}</ul>,
+                ol: ({ children }) => <ol className="list-decimal pl-5 mb-2 flex flex-col gap-1">{children}</ol>,
+                li: ({ children }) => <li>{children}</li>,
+              }}
+            >
+              {msg.content}
+            </ReactMarkdown>
+          )}
         </div>
         {msg.escalated && (
           <p className="text-base font-medium px-1" style={{ color: '#888' }}>

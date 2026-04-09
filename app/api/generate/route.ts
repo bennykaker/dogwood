@@ -27,9 +27,72 @@ function getAnthropicKey(): string {
   } catch { return '' }
 }
 
+const VALUE_LABELS: Record<string, string> = {
+  claim: 'property damage or theft claim',
+  liability: 'liability — may have hurt someone or damaged their property',
+  buying: 'buying insurance or understanding coverage',
+  car: 'vehicle', home: 'house (home insurance)', strata: 'condo / strata unit',
+  rental: 'rental unit (tenant insurance)', other: 'other property',
+  collision: 'collision with vehicle or object', weather: 'weather damage',
+  theft: 'theft or vandalism', hit_and_run: 'hit and run / unknown driver',
+  at_fault: 'user was at fault', other_at_fault: 'other driver was at fault',
+  shared_fault: 'shared fault', disputed: 'fault disputed or unclear',
+  fire: 'fire or smoke', water: 'water damage', earthquake: 'earthquake',
+  storm: 'wind, storm, or hail', pipe_burst: 'burst pipe or appliance leak (interior)',
+  sewer_backup: 'sewer backup', overland_flood: 'overland flooding from outside',
+  water_unsure: 'water damage — type unclear', my_unit_only: 'damage confined to unit',
+  my_unit_caused_leak: "user's unit leaked into unit below",
+  above_damaged_mine: "water from above / other unit damaged the user's unit",
+  common_areas: 'common areas of the building',
+  tenant_damage: 'user accidentally damaged the rental unit',
+  pre_claim: 'no claim filed yet — determining coverage',
+  denied: 'claim denied or underpaid', in_progress: 'claim in progress',
+  coverage_check: 'just wants to understand coverage',
+  car_accident: 'car accident — potential personal injury or property damage liability',
+  injury_on_property: "someone injured on user's property",
+  water_neighbour: "user's water damage affected a neighbour",
+  other_liability: 'other liability situation',
+  formal_notice: 'formal claim or legal notice already received',
+  anticipated: 'no formal claim yet but anticipated',
+  understanding: 'wants to understand exposure',
+  auto: 'auto insurance (ICBC)', coverage_basics: 'what is and is not covered',
+  coverage_gap: 'specific coverage gap or concern',
+  cost_factors: 'what affects premiums and cost',
+  broker_questions: 'what questions to ask a broker',
+  unsure: 'not sure what type', icbc: 'ICBC',
+  yes: 'known insurer (see name below)', multiple: 'multiple insurers involved',
+  no: 'insurer not known',
+}
+
+const DATA_KEY_LABELS: Record<string, string> = {
+  intent: 'Situation', property_type: 'Property', car_cause: 'Vehicle incident',
+  car_fault: 'Fault', home_cause: 'Cause of home damage', home_water_type: 'Water damage type',
+  strata_cause: 'Strata incident', strata_water_scope: 'Scope of water damage',
+  rental_cause: 'Rental incident', claim_status: 'Claim status',
+  liability_type: 'Liability type', liability_status: 'Formal claim status',
+  buying_type: 'Insurance type', buying_question: 'Main question',
+  insurer_known: 'Insurer', insurer_name: 'Insurer name',
+}
+
+function buildDescriptionFromData(data: Record<string, string>): string {
+  return Object.entries(data)
+    .map(([k, v]) => `${DATA_KEY_LABELS[k] ?? k}: ${VALUE_LABELS[v] ?? v}`)
+    .join('\n')
+}
+
 export async function POST(req: NextRequest) {
-  const { question, sessionId } = await req.json()
-  if (!question?.trim()) return NextResponse.json({ error: 'Question is required' }, { status: 400 })
+  const body = await req.json()
+  const { sessionId } = body
+
+  let question: string
+  if (body.data && typeof body.data === 'object') {
+    question = buildDescriptionFromData(body.data as Record<string, string>)
+  } else {
+    // legacy plain question fallback
+    question = body.question ?? ''
+  }
+
+  if (!question.trim()) return NextResponse.json({ error: 'Question is required' }, { status: 400 })
 
   // Fetch stored template (latest)
   const { data: templateRow } = await supabaseAdmin

@@ -108,13 +108,79 @@ export async function POST(req: NextRequest) {
 
   const masterTemplate = templateRow?.template ?? DEFAULT_TEMPLATE
 
-  // Fetch all knowledge chunks — small enough to include all in every call
-  const { data: knowledge } = await supabaseAdmin
+  // Fetch all knowledge chunks with keywords for smart selection
+  const { data: allKnowledge } = await supabaseAdmin
     .from('insurance_knowledge')
-    .select('topic, content')
+    .select('topic, content, keywords')
     .order('id')
 
-  const knowledgeText = (knowledge ?? [])
+  const chunks = allKnowledge ?? []
+  const inputData: Record<string, string> = body.data ?? {}
+
+  // Build keyword set from tree answers
+  const relevantKeywords = new Set<string>()
+  const d = inputData
+  if (d.property_type === 'car' || d.buying_type === 'auto' || d.liability_type === 'car_accident' || d.car_cause) {
+    ['icbc', 'auto', 'car', 'vehicle', 'accident'].forEach(k => relevantKeywords.add(k))
+  }
+  if (d.property_type === 'strata' || d.buying_type === 'strata' || d.strata_cause || d.strata_water_scope) {
+    ['strata', 'condo', 'unit'].forEach(k => relevantKeywords.add(k))
+  }
+  if (d.property_type === 'home' || d.buying_type === 'home') {
+    ['home', 'house'].forEach(k => relevantKeywords.add(k))
+  }
+  if (d.property_type === 'rental' || d.buying_type === 'tenant') {
+    ['tenant', 'renter', 'rental', 'landlord'].forEach(k => relevantKeywords.add(k))
+  }
+  if (d.home_cause === 'earthquake' || d.strata_cause === 'earthquake') {
+    ['earthquake', 'seismic'].forEach(k => relevantKeywords.add(k))
+  }
+  if (d.home_water_type === 'sewer_backup') {
+    ['sewer', 'backup', 'water', 'flood'].forEach(k => relevantKeywords.add(k))
+  }
+  if (d.home_water_type === 'overland_flood') {
+    ['flood', 'overland', 'water'].forEach(k => relevantKeywords.add(k))
+  }
+  if (d.home_water_type === 'pipe_burst' || d.strata_cause === 'water') {
+    ['water'].forEach(k => relevantKeywords.add(k))
+  }
+  if (d.strata_water_scope) {
+    ['strata', 'deductible', 'assessment'].forEach(k => relevantKeywords.add(k))
+  }
+  if (d.car_cause === 'collision') {
+    ['collision', 'accident', 'icbc'].forEach(k => relevantKeywords.add(k))
+  }
+  if (d.car_cause === 'theft' || d.rental_cause === 'theft' || d.home_cause === 'theft') {
+    ['comprehensive', 'theft'].forEach(k => relevantKeywords.add(k))
+  }
+  if (d.claim_status === 'denied' || d.claim_status === 'in_progress') {
+    ['claim', 'denial', 'adjuster', 'rights', 'dispute'].forEach(k => relevantKeywords.add(k))
+  }
+  if (d.intent === 'liability') {
+    ['liability', 'third-party'].forEach(k => relevantKeywords.add(k))
+  }
+  if (d.intent === 'buying') {
+    ['broker'].forEach(k => relevantKeywords.add(k))
+  }
+  if (d.buying_question === 'coverage_gap' || d.buying_question === 'coverage_basics') {
+    ['exclusion'].forEach(k => relevantKeywords.add(k))
+  }
+
+  // Score each chunk by keyword overlap, select top relevant ones
+  const kwArray = [...relevantKeywords]
+  const scored = chunks
+    .map(c => ({
+      ...c,
+      score: (c.keywords as string[] ?? []).filter((k: string) => kwArray.includes(k)).length,
+    }))
+    .sort((a, b) => b.score - a.score)
+
+  const hasMatches = scored.some(c => c.score > 0)
+  const selected = hasMatches
+    ? scored.filter(c => c.score > 0).slice(0, 7)
+    : scored.slice(0, 6)
+
+  const knowledgeText = selected
     .map(k => `[${k.topic}]\n${k.content}`)
     .join('\n\n---\n\n')
 

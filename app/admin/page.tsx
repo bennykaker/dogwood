@@ -156,7 +156,7 @@ export default function AdminPage() {
             </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {flagged.map(log => (
-                <LogRow key={log.id} log={log} expanded={expanded} setExpanded={setExpanded} onFlag={handleFlag} />
+                <LogRow key={log.id} log={log} expanded={expanded} setExpanded={setExpanded} onFlag={handleFlag} password={password} />
               ))}
             </div>
           </div>
@@ -169,7 +169,7 @@ export default function AdminPage() {
           </h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             {logs.map(log => (
-              <LogRow key={log.id} log={log} expanded={expanded} setExpanded={setExpanded} onFlag={handleFlag} />
+              <LogRow key={log.id} log={log} expanded={expanded} setExpanded={setExpanded} onFlag={handleFlag} password={password} />
             ))}
           </div>
         </div>
@@ -178,13 +178,36 @@ export default function AdminPage() {
   )
 }
 
-function LogRow({ log, expanded, setExpanded, onFlag }: {
+function LogRow({ log, expanded, setExpanded, onFlag, password }: {
   log: LogEntry
   expanded: number | null
   setExpanded: (id: number | null) => void
   onFlag: (id: number, flagged: boolean) => void
+  password: string
 }) {
   const isOpen = expanded === log.id
+  const [generatingChunk, setGeneratingChunk] = useState(false)
+  const [chunkMsg, setChunkMsg] = useState<string | null>(null)
+
+  async function handleGenerateChunk() {
+    setGeneratingChunk(true)
+    setChunkMsg(null)
+    try {
+      const res = await fetch('/api/admin/generate-chunk', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ logId: log.id, password }),
+      })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error)
+      setChunkMsg(`✓ Added: "${data.topic}"`)
+    } catch (e) {
+      setChunkMsg(e instanceof Error ? e.message : 'Failed')
+    } finally {
+      setGeneratingChunk(false)
+    }
+  }
+
   return (
     <div style={{ background: '#142e20', border: `1px solid ${log.flagged ? 'rgba(248,113,113,0.3)' : '#1e4a30'}`, borderRadius: '10px', overflow: 'hidden' }}>
       <div
@@ -225,7 +248,7 @@ function LogRow({ log, expanded, setExpanded, onFlag }: {
                 {log.generated_prompt}
               </pre>
             </div>
-            <div style={{ display: 'flex', gap: '10px' }}>
+            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center' }}>
               <button
                 onClick={() => onFlag(log.id, !log.flagged)}
                 style={{
@@ -237,8 +260,25 @@ function LogRow({ log, expanded, setExpanded, onFlag }: {
               >
                 {log.flagged ? 'Remove flag' : '🚩 Flag for knowledge base'}
               </button>
+              <button
+                onClick={handleGenerateChunk}
+                disabled={generatingChunk}
+                style={{
+                  background: 'rgba(74,222,128,0.08)',
+                  border: '1px solid rgba(74,222,128,0.25)',
+                  borderRadius: '7px', padding: '6px 14px', fontSize: '13px', fontWeight: 600,
+                  color: generatingChunk ? '#2a5a3a' : '#4ade80', cursor: generatingChunk ? 'not-allowed' : 'pointer',
+                }}
+              >
+                {generatingChunk ? 'Running Opus…' : '+ Generate knowledge chunk'}
+              </button>
+              {chunkMsg && (
+                <span style={{ fontSize: '12px', color: chunkMsg.startsWith('✓') ? '#4ade80' : '#f87171' }}>
+                  {chunkMsg}
+                </span>
+              )}
               {log.session_id && (
-                <span style={{ fontSize: '12px', color: '#2a5a3a', alignSelf: 'center' }}>
+                <span style={{ fontSize: '12px', color: '#2a5a3a', marginLeft: 'auto' }}>
                   Session: {log.session_id.slice(0, 8)}…
                 </span>
               )}

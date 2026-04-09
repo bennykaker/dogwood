@@ -62,6 +62,9 @@ const VALUE_LABELS: Record<string, string> = {
   unsure: 'not sure what type', icbc: 'ICBC',
   yes: 'known insurer (see name below)', multiple: 'multiple insurers involved',
   no: 'insurer not known',
+  novice: 'no insurance knowledge — explain all terms',
+  basic: 'basic familiarity with insurance',
+  competent: 'understands insurance reasonably well',
 }
 
 const DATA_KEY_LABELS: Record<string, string> = {
@@ -72,6 +75,7 @@ const DATA_KEY_LABELS: Record<string, string> = {
   liability_type: 'Liability type', liability_status: 'Formal claim status',
   buying_type: 'Insurance type', buying_question: 'Main question',
   insurer_known: 'Insurer', insurer_name: 'Insurer name',
+  knowledge_level: 'User insurance knowledge',
 }
 
 function buildDescriptionFromData(data: Record<string, string>): string {
@@ -121,12 +125,16 @@ export async function POST(req: NextRequest) {
 You will be given:
 1. A master prompt template with [USER_SITUATION] and [KNOWLEDGE_CONTEXT] placeholders
 2. BC insurance knowledge chunks
-3. The user's raw situation description
+3. The user's raw situation description, which may include a "User insurance knowledge" field
 
 Your task:
 - Rewrite the user's situation in clear, precise language (fix vague terms, add specificity, preserve their intent)
 - Select the 3–5 most relevant knowledge chunks and format them clearly
 - Populate the template placeholders with your rewritten content
+- If the knowledge level is "no insurance knowledge — explain all terms": add this line near the top of the generated prompt: "Important: I have very little insurance knowledge. Please explain every term, acronym, and concept as you use it — assume I know nothing about how insurance works."
+- If the knowledge level is "basic familiarity with insurance": add this line: "Note: I have some basic insurance familiarity but am not an expert. Please explain BC-specific terms and anything unusual, but you don't need to define common concepts like deductible or premium."
+- If the knowledge level is "understands insurance reasonably well": add this line: "Note: I understand insurance reasonably well. You can use standard terminology without over-explaining basics."
+- If no knowledge level was provided, write the prompt for someone with basic familiarity
 - Return ONLY the final populated prompt — no preamble, no explanation, no commentary`
 
   const userMessage = `MASTER TEMPLATE:

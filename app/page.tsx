@@ -268,12 +268,39 @@ const TREE: Record<string, NodeDef> = {
       { term: 'Direct insurer', def: "Some home and strata insurers sell directly without a broker. Check your policy documents or your bank statement to see who you're paying." },
     ],
     dataKey: 'insurer_known',
+    options: [
+      { label: 'ICBC', value: 'icbc', next: 'knowledge_level' },
+      { label: 'Yes — I know the company name', value: 'yes', next: 'knowledge_level' },
+      { label: 'Multiple companies are involved', value: 'multiple', next: 'knowledge_level' },
+      { label: "No / not sure", value: 'no', next: 'knowledge_level' },
+    ],
+  },
+
+  knowledge_level: {
+    question: 'How familiar are you with insurance?',
+    subtext: "We use this to pitch the answer at the right level — no wrong answer.",
+    jargon: [],
+    dataKey: 'knowledge_level',
     terminal: true,
     options: [
-      { label: 'ICBC', value: 'icbc', next: null },
-      { label: 'Yes — I know the company name', value: 'yes', next: null },
-      { label: 'Multiple companies are involved', value: 'multiple', next: null },
-      { label: "No / not sure", value: 'no', next: null },
+      {
+        label: "I know almost nothing about insurance",
+        sublabel: "Please explain terms and acronyms as you go",
+        value: 'novice',
+        next: null,
+      },
+      {
+        label: "I know the basics",
+        sublabel: "I've dealt with insurance before but I'm not an expert",
+        value: 'basic',
+        next: null,
+      },
+      {
+        label: "I understand insurance reasonably well",
+        sublabel: "You can use standard terms without over-explaining",
+        value: 'competent',
+        next: null,
+      },
     ],
   },
 }
@@ -331,6 +358,9 @@ const VALUE_LABELS: Record<string, string> = {
   yes: 'known insurer (see name below)',
   multiple: 'multiple insurers involved',
   no: 'insurer not known',
+  novice: 'no insurance knowledge — explain all terms',
+  basic: 'basic familiarity with insurance',
+  competent: 'understands insurance reasonably well',
 }
 
 const DATA_KEY_LABELS: Record<string, string> = {
@@ -350,6 +380,7 @@ const DATA_KEY_LABELS: Record<string, string> = {
   buying_question: 'Main question',
   insurer_known: 'Insurer',
   insurer_name: 'Insurer name',
+  knowledge_level: 'User insurance knowledge',
 }
 
 function buildDescription(data: CollectedData): string {
